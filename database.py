@@ -1,26 +1,39 @@
-import pymongo
+# database.py
+from pymongo import MongoClient
+from info import MONGODB_URL
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")  # Your MongoDB URL
-db = client["file_bot"]
-files_collection = db["files"]
-settings_collection = db["settings"]
+client = MongoClient(MONGODB_URL)
+db = client['file_bot']
 
-def file_exists(url):
-    return files_collection.find_one({"url": url}) is not None
+# File collection (store already uploaded files)
+file_collection = db['files']
 
-def store_file(url, filename):
-    files_collection.insert_one({"url": url, "filename": filename})
+# URLs collection (store target URLs)
+urls_collection = db['urls']
 
-def get_channels():
-    data = settings_collection.find_one({"_id": "channels"})
-    return data["list"] if data else []
+# Channels collection (store private channels)
+channels_collection = db['channels']
 
-def set_channels(channels):
-    settings_collection.update_one({"_id": "channels"}, {"$set": {"list": channels}}, upsert=True)
+def file_exists(link):
+    return file_collection.find_one({"link": link}) is not None
+
+def store_file(link, filename):
+    file_collection.insert_one({"link": link, "filename": filename})
 
 def get_target_urls():
-    data = settings_collection.find_one({"_id": "target_urls"})
-    return data["list"] if data else []
+    urls = urls_collection.find()
+    return [url['url'] for url in urls]
 
-def set_target_urls(urls):
-    settings_collection.update_one({"_id": "target_urls"}, {"$set": {"list": urls}}, upsert=True)
+def set_target_urls(url_list):
+    urls_collection.delete_many({})  # Clear the current URLs
+    for url in url_list:
+        urls_collection.insert_one({"url": url})
+
+def get_private_channels():
+    channels = channels_collection.find()
+    return [channel['channel_id'] for channel in channels]
+
+def set_private_channels(channel_list):
+    channels_collection.delete_many({})  # Clear the current channels
+    for channel in channel_list:
+        channels_collection.insert_one({"channel_id": channel})
