@@ -1,40 +1,34 @@
-import asyncio
-from pyrogram import Client, filters
-from commands import auto_scrape_and_send, status, start, set_channels_cmd, set_urls_cmd, get_urls_cmd
-from info import API_ID, API_HASH, BOT_TOKEN
+# main.py
+from pyrogram import Client
+from info import API_ID, API_HASH, BOT_TOKEN, OWNER_ID
+from commands import start, status, set_private_channels_cmd, set_urls_cmd, get_urls_cmd
+import logging
 
-app = Client("scraper_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
-@app.on_message(filters.command("status"))
-async def status_cmd(client, message):
-    await status(client, message)
+# Initialize the Pyrogram Client with API credentials and Bot Token
+app = Client("file_scraper_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 @app.on_message(filters.command("start"))
-async def start_cmd(client, message):
+async def handle_start(client, message):
     await start(client, message)
 
-@app.on_message(filters.command("channels"))
-async def channels_cmd(client, message):
-    await set_channels_cmd(client, message)
+@app.on_message(filters.command("status"))
+async def handle_status(client, message):
+    await status(client, message)
+
+@app.on_message(filters.command("setchannels"))
+async def handle_set_channels(client, message):
+    await set_private_channels_cmd(client, message)
 
 @app.on_message(filters.command("urls"))
-async def urls_cmd(client, message):
+async def handle_set_urls(client, message):
     await set_urls_cmd(client, message)
 
 @app.on_message(filters.command("geturls"))
-async def get_urls_cmd(client, message):
+async def handle_get_urls(client, message):
     await get_urls_cmd(client, message)
 
-async def scheduler():
-    while True:
-        await auto_scrape_and_send(app)
-        await asyncio.sleep(300)  # Run every 5 minutes
-
-async def main():
-    await app.start()
-    asyncio.create_task(scheduler())
-    print("Bot is running...")
-    await app.idle()
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    app.run()
