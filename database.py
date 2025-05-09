@@ -1,6 +1,6 @@
 import pymongo
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient("mongodb://localhost:27017/")  # Your MongoDB URL
 db = client["file_bot"]
 files_collection = db["files"]
 settings_collection = db["settings"]
