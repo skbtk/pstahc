@@ -1,16 +1,20 @@
-name: telegram-scraper-bot
+name: telegram-file-bot
 
-build:
-  type: docker
-
-run:
-  cmd: "python main.py"
-  env:
-    - name: BOT_TOKEN
-      value: "your_bot_token_here"
-    - name: API_ID
-      value: "your_api_id_here"
-    - name: API_HASH
-      value: "your_api_hash_here"
-    - name: MONGODB_URI
-      value: "your_mongodb_uri_here"
+services:
+  - name: file-uploader
+    git:
+      url: https://github.com/SAbotsup/my-scrapper
+      branch: main
+      build_command: "pip install -r requirements.txt"
+      run_command: "python main.py"
+    env:
+      - name: API_ID
+        value: "26513278"
+      - name: API_HASH
+        value: "7a3df75c8ed3520737e343e9f049166b"
+      - name: BOT_TOKEN
+        value: "8057096821:AAEDiRjHWCFpeC2TXA_kyQHeMhQZRUGa8SA"
+      - name: MONGODB_URL
+        value: "mongodb+srv://mojahidalam8092:j5yMFo5g0YhUTkIT@cluster0.ivhm8cu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+      - name: OWNER_ID
+        value: "5249356814"
