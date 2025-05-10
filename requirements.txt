@@ -1,3 +1,5 @@
-pyrogram==2.0.0
-pymongo==3.11.4
-requests==2.26.0
+pyrogram==2.0.106
+tgcrypto
+requests
+bs4
+pymongo
