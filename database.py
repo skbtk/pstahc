@@ -2,32 +2,19 @@ from pymongo import MongoClient
 from info import MONGODB_URL
 
 client = MongoClient(MONGODB_URL)
-db = client['file_bot']
+db = client['scraper_bot']
+files = db['uploaded_files']
+channels = db['upload_channels']
 
-file_collection = db['files']
-urls_collection = db['urls']
-channels_collection = db['channels']
+def file_exists(url):
+    return files.find_one({"url": url}) is not None
 
-def file_exists(link):
-    return file_collection.find_one({"link": link}) is not None
+def store_file(url, filename):
+    files.insert_one({"url": url, "filename": filename})
 
-def store_file(link, filename):
-    file_collection.insert_one({"link": link, "filename": filename})
+def get_channels():
+    return [channel['channel_id'] for channel in channels.find()]
 
-def get_target_urls():
-    urls = urls_collection.find()
-    return [url['url'] for url in urls]
-
-def set_target_urls(url_list):
-    urls_collection.delete_many({})
-    for url in url_list:
-        urls_collection.insert_one({"url": url})
-
-def get_private_channels():
-    channels = channels_collection.find()
-    return [channel['channel_id'] for channel in channels]
-
-def set_private_channels(channel_list):
-    channels_collection.delete_many({})
-    for channel in channel_list:
-        channels_collection.insert_one({"channel_id": channel})
+def add_channel(channel_id):
+    if not channels.find_one({"channel_id": channel_id}):
+        channels.insert_one({"channel_id": channel_id})
