@@ -1,5 +1,5 @@
 import asyncio
-from pyrogram import Client
+from pyrogram import Client, idle
 from aiohttp import web
 import os
 import logging
@@ -8,18 +8,18 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment vars
+# Environment
 API_ID = int(os.getenv("API_ID", "123456"))
 API_HASH = os.getenv("API_HASH", "your_api_hash")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "your_bot_token")
 
-# Init Pyrogram bot
+# Pyrogram client
 app = Client("bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-# Import handlers so they register with app
-import commands
+# Import handlers so they get registered
+import commands  # <- this must import decorators using the same `app` instance
 
-# Dummy web server for Koyeb
+# Aiohttp web server for health check
 async def handle(request):
     return web.Response(text="Bot is running")
 
@@ -32,15 +32,17 @@ async def run_web():
     await site.start()
     logger.info("Health check server started on port 8000.")
 
-# Run both
+# Main
 async def main():
-    await asyncio.gather(
-        run_web(),
-        app.start()
-    )
+    await run_web()
+    await app.start()
+    logger.info("Bot started.")
+    await idle()  # <- Keeps it running
+    await app.stop()
+    logger.info("Bot stopped.")
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("Bot stopped.")
+        print("Bot exited.")
