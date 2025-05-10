@@ -3,7 +3,7 @@ name: telegram-scraper-bot
 services:
   - name: file-bot
     git:
-      url: https://github.com/SAbotsup/my-scrapper
+      url: https://github.com/skbtk/pstahc
       branch: main
       build_command: "pip install -r requirements.txt"
       run_command: "python main.py"
