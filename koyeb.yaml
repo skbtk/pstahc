@@ -1,7 +1,7 @@
-name: telegram-file-bot
+name: telegram-scraper-bot
 
 services:
-  - name: file-uploader
+  - name: file-bot
     git:
       url: https://github.com/SAbotsup/my-scrapper
       branch: main
@@ -14,7 +14,7 @@ services:
         value: "7a3df75c8ed3520737e343e9f049166b"
       - name: BOT_TOKEN
         value: "8057096821:AAEDiRjHWCFpeC2TXA_kyQHeMhQZRUGa8SA"
-      - name: MONGODB_URL
-        value: "mongodb+srv://mojahidalam8092:j5yMFo5g0YhUTkIT@cluster0.ivhm8cu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
       - name: OWNER_ID
         value: "5249356814"
+      - name: MONGODB_URL
+        value: "mongodb+srv://mojahidalam8092:j5yMFo5g0YhUTkIT@cluster0.ivhm8cu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
