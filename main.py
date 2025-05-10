@@ -1,13 +1,11 @@
-# main.py
-from pyrogram import Client
-from info import API_ID, API_HASH, BOT_TOKEN, OWNER_ID
-from commands import start, status, set_private_channels_cmd, set_urls_cmd, get_urls_cmd
-import logging
+from pyrogram import Client, filters
+from info import API_ID, API_HASH, BOT_TOKEN
+from commands import (
+    start, status,
+    set_private_channels_cmd, set_urls_cmd,
+    get_urls_cmd
+)
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-
-# Initialize the Pyrogram Client with API credentials and Bot Token
 app = Client("file_scraper_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 @app.on_message(filters.command("start"))
